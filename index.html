@@ -1,1 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Student Attendance System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f7fb;
+      margin: 0;
+      padding: 20px;
+    }
 
+    h1 {
+      text-align: center;
+      color: #1e3a5f;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+
+    input {
+      padding: 10px;
+      width: 70%;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    button {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 3px;
+    }
+
+    .add-btn {
+      background: #2563eb;
+      color: white;
+    }
+
+    .present {
+      background: #22c55e;
+      color: white;
+    }
+
+    .absent {
+      background: #ef4444;
+      color: white;
+    }
+
+    .delete {
+      background: #6b7280;
+      color: white;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      text-align: center;
+    }
+
+    th {
+      background: #1e3a5f;
+      color: white;
+    }
+
+    .summary {
+      margin-top: 20px;
+      background: #e0f2fe;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>Student Attendance System</h1>
+
+    <input type="text" id="studentName" placeholder="Enter student name">
+    <button class="add-btn" onclick="addStudent()">Add Student</button>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Student Name</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="studentTable"></tbody>
+    </table>
+
+    <div class="summary" id="summary">
+      Present: 0 | Absent: 0 | Total: 0
+    </div>
+  </div>
+
+  <script>
+    let students = [];
+
+    function addStudent() {
+      let name = document.getElementById("studentName").value.trim();
+
+      if (name === "") {
+        alert("Please enter a student name");
+        return;
+      }
+
+      students.push({
+        name: name,
+        status: "Not Marked"
+      });
+
+      document.getElementById("studentName").value = "";
+      displayStudents();
+    }
+
+    function markAttendance(index, status) {
+      students[index].status = status;
+      displayStudents();
+    }
+
+    function deleteStudent(index) {
+      students.splice(index, 1);
+      displayStudents();
+    }
+
+    function displayStudents() {
+      let table = document.getElementById("studentTable");
+      table.innerHTML = "";
+
+      students.forEach((student, index) => {
+        table.innerHTML += `
+          <tr>
+            <td>${student.name}</td>
+            <td>${student.status}</td>
+            <td>
+              <button class="present" onclick="markAttendance(${index}, 'Present')">Present</button>
+              <button class="absent" onclick="markAttendance(${index}, 'Absent')">Absent</button>
+              <button class="delete" onclick="deleteStudent(${index})">Delete</button>
+            </td>
+          </tr>
+        `;
+      });
+
+      updateSummary();
+    }
+
+    function updateSummary() {
+      let present = students.filter(s => s.status === "Present").length;
+      let absent = students.filter(s => s.status === "Absent").length;
+      let total = students.length;
+
+      document.getElementById("summary").innerHTML =
+        `Present: ${present} | Absent: ${absent} | Total: ${total}`;
+    }
+  </script>
+
+</body>
+</html>
